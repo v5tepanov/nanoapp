@@ -11,15 +11,17 @@ header = ('<!DOCTYPE html><header><style type="text/css">'
 footer = '</body></html>'
 
 app = Flask(__name__)
-ip_addr = gethostbyname(gethostname())
 
 @app.route('/')
 def index():
-    return(f'{header}<pre>nanoapp: Hello, world!\n\n{ip_addr}; {datetime.now()}</pre>{footer}')
+    html =  f'nanoapp: Hello, world!\n\n{datetime.now()}\n\n'
+    html += '<a href="/env">/env</a>'
+    return(f'{header}<pre>{html}</pre>{footer}')
 
 @app.route('/env')
 def print_env():
-    html = header + f'<pre>_IP_ADDR = {ip_addr}\n_NOW = {datetime.now()}\n\n'
+    ip_addr = gethostbyname(gethostname())
+    html = header + f'<pre>IP_ADDR = {ip_addr}\nNOW = {datetime.now()}\n\n'
     for var in environ:
         html += f'{var} = {escape(environ[var])}\n'
     html += '</pre>' + footer
@@ -32,6 +34,24 @@ def print_str(s):
 @app.route('/healthy')
 def liveness_probe():
     return(f'{header}<pre>Yes</pre>{footer}')
+
+@app.route('/ip')
+def ip():
+    ip_addr = gethostbyname(gethostname())
+    return(f'{header}<pre>{ip_addr}</pre>{footer}')
+
+@app.route('/help')
+def help():
+    html =  '<a href="/">/</a>\n'
+    html += '<a href="/env">/env</a>\n'
+    html += '<a href="/healthy">/healthy</a>\n'
+    html += '<a href="/ip">/ip</a>\n'
+    html += '<a href="/print/STRING">/print/STRING</a>'
+    return(f'{header}<pre>{html}</pre>{footer}')
+
+@app.errorhandler(404)
+def not_found(err):
+    return(f'{header}<pre>{err}</pre>{footer}'), 404
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
