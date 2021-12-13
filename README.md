@@ -1,14 +1,8 @@
 # nanoapp
 
-Flask-based mini application for K8s tests.
+Flask-based mini application for Docker & K8s tests:
 
-URLs supported:
+![screenshot](screenshot.png)
 
-- /
-- /healthy
-- /env (return environment variables)
-- /ip (return IP address)
-- /print/X (return X)
-
-(c) 2021 Victor Stepanov
+&copy; 2021 Victor Stepanov
 

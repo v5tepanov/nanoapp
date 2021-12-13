@@ -1,9 +1,11 @@
-FROM alpine
+FROM alpine:3.15 AS base
 
 RUN apk --no-cache update
 RUN apk --no-cache upgrade
 RUN apk --no-cache add python3 py3-pip
 RUN pip3 install --upgrade pip
+
+FROM base AS final
 
 ARG USER=default
 ENV HOME=/home/$USER
@@ -22,4 +24,3 @@ WORKDIR $HOME
 EXPOSE 5000
 
 CMD ["/usr/bin/python3", "nanoapp.py"]
-
